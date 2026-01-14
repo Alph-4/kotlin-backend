@@ -40,7 +40,7 @@ class UserController(
         return ResponseEntity.ok(UserResponse(
             id = user.id!!,
             email = user.email,
-            username = user.username,
+            displayName = user.displayName,
             role = user.role
         ))
     }

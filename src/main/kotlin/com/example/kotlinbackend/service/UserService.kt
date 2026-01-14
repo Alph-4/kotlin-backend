@@ -71,7 +71,7 @@ class UserService(
     private fun User.toUserResponse() = UserResponse(
         id = id!!,
         email = email,
-        username = username,
+        displayName = displayName,
         role = role
     )
 }

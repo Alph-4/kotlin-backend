@@ -45,7 +45,7 @@ class AuthService(
         // Création de l'utilisateur
         val user = User(
             email = request.email,
-            username = request.username,
+            displayName = request.displayName,
             password = passwordEncoder.encode(request.password), // Crypte le mot de passe
             role = "USER"
         )
@@ -102,7 +102,7 @@ class AuthService(
     private fun User.toUserResponse() = UserResponse(
         id = id!!,
         email = email,
-        username = username,
+        displayName = displayName,
         role = role
     )
 }

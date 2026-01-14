@@ -33,10 +33,10 @@ data class User(
     val email: String,
     
     /**
-     * Nom d'utilisateur
+     * Nom d'utilisateur (affichage)
      */
     @Column(nullable = false)
-    val username: String,
+    val displayName: String,
     
     /**
      * Mot de passe crypté (ne jamais stocker en clair!)

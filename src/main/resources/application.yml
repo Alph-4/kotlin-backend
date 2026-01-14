@@ -29,8 +29,8 @@ spring:
 server:
   port: 8080
   error:
-    include-message: true
-    include-binding-errors: true
+    include-message: ALWAYS
+    include-binding-errors: ALWAYS
 
 # Configuration JWT personnalisée
 jwt:
