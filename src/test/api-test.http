@@ -1,0 +1,98 @@
+### filepath: /workspaces/kotlin-backend/api-test.http
+
+@baseUrl = http://localhost:8080
+
+### 1️⃣ INSCRIPTION - Créer un compte ADMIN
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "displayName": "Admin User",
+  "password": "password123",
+  "role": "ADMIN"
+}
+
+### 2️⃣ CONNEXION - Se connecter
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "password123"
+}
+
+### Extraire le token (REST Client extension)
+@adminToken = {{login.response.body.token}}
+
+### 3️⃣ MON PROFIL - Récupérer mon profil
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{adminToken}}
+
+### 4️⃣ CRÉER UN TODO
+POST {{baseUrl}}/api/todos
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Ma première tâche",
+  "description": "Ceci est une tâche de test",
+  "completed": false
+}
+
+### 5️⃣ VOIR MES TODOS
+GET {{baseUrl}}/api/todos
+Authorization: Bearer {{adminToken}}
+
+### 6️⃣ INSCRIRE UN AUTRE UTILISATEUR (USER)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "displayName": "Simple User",
+  "password": "password123",
+    "role": "USER"
+}
+
+### 7️⃣ CONNECTER L'UTILISATEUR USER
+# @name userLogin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "password123"
+}
+
+@userToken = {{userLogin.response.body.token}}
+
+### 8️⃣ TEST D'AUTORISATION - USER essaie d'accéder à la liste des users (devrait être refusé 403)
+GET {{baseUrl}}/api/users
+Authorization: Bearer {{{{userToken}}}}
+
+### 9️⃣ ACCÉDER À H2 CONSOLE (base de données)
+GET {{baseUrl}}/h2-console
+
+### 10️⃣ VÉRIFIER LA LISTE DES TODOS EN TANT QU'USER
+GET {{baseUrl}}/api/todos
+Authorization: Bearer {{userToken}} 
+
+### 11️⃣ CRÉER UN TODO EN TANT QU'USER
+POST {{baseUrl}}/api/todos
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+{
+  "title": "Tâche de l'utilisateur",
+  "description": "Ceci est une tâche créée par l'utilisateur",
+  "completed": false
+}   
+
+### 12️⃣ VOIR LES TODOS EN TANT QU'USER
+GET {{baseUrl}}/api/todos
+Authorization: Bearer {{userToken}}
+
+### 13️⃣ TEST D'AUTORISATION - ADMIN essaie d'accéder à la liste des users
+GET {{baseUrl}}/api/users
+Authorization: Bearer {{adminToken}}

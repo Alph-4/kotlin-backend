@@ -11,7 +11,8 @@ package com.example.kotlinbackend.dto
 data class RegisterRequest(
     val email: String,
     val displayName: String,
-    val password: String
+    val password: String,
+    val role: String = "USER"  // Par défaut USER, mais peut être ADMIN
 )
 
 /**

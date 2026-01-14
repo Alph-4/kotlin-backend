@@ -47,7 +47,7 @@ class AuthService(
             email = request.email,
             displayName = request.displayName,
             password = passwordEncoder.encode(request.password), // Crypte le mot de passe
-            role = "USER"
+            role = request.role  // Utilise le rôle fourni (USER ou ADMIN)
         )
         
         // Sauvegarde en base de données

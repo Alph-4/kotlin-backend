@@ -101,7 +101,9 @@ class SecurityConfig(
             .cors { it.configurationSource(corsConfigurationSource()) }
             
             // Désactive CSRF (pas nécessaire pour une API REST stateless)
-            .csrf { it.disable() }
+            .csrf { csrf ->
+                csrf.ignoringRequestMatchers("/h2-console/**")  // Désactive CSRF pour H2
+            }
             
             // Configuration des autorisations
             .authorizeHttpRequests { authorize ->
@@ -133,7 +135,7 @@ class SecurityConfig(
             
             // Permet l'affichage de la console H2 dans un iframe (dev uniquement)
             .headers { headers ->
-                headers.frameOptions { it.sameOrigin() }
+                headers.frameOptions { it.disable() }  // Désactive complètement pour H2
             }
         
         return http.build()
