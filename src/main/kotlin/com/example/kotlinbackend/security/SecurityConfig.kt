@@ -14,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 /**
  * Configuration de Spring Security
@@ -67,12 +70,36 @@ class SecurityConfig(
     }
     
     /**
+     * Configuration des CORS (Cross-Origin Resource Sharing)
+     * Définit les origines, méthodes et en-têtes autorisés pour les requêtes cross-origin
+     */
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf(
+            "http://localhost:3000",
+            "http://localhost:4200",
+            "https://cuddly-goggles-957q767rpw6c9p7p.github.dev"
+        )
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = true
+        
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
+    }
+    
+    /**
      * Configuration de la chaîne de filtres de sécurité
      * Définit les règles d'accès aux différents endpoints
      */
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            // Configuration des CORS
+            .cors { it.configurationSource(corsConfigurationSource()) }
+            
             // Désactive CSRF (pas nécessaire pour une API REST stateless)
             .csrf { it.disable() }
             
