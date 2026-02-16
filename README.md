@@ -12,10 +12,11 @@ Ce projet est un backend REST API complet développé en Kotlin avec Spring Boot
 
 ## 🛠️ Technologies utilisées
 
-- **Kotlin** 1.9.21
-- **Spring Boot** 3.2.1
+- **Kotlin** 2.1.0
+- **Spring Boot** 3.4.1
 - **Spring Security** (authentification et autorisation)
 - **Spring Data JPA** (persistance des données)
+- **Spring WebSocket** (logs temps reel)
 - **JWT** (io.jsonwebtoken:jjwt)
 - **H2 Database** (base de données en mémoire)
 - **Gradle** (gestion des dépendances)
@@ -54,7 +55,7 @@ src/main/kotlin/com/example/kotlinbackend/
 
 ### Prérequis
 
-- JDK 17 ou supérieur
+- JDK 22 ou supérieur
 - Gradle (ou utilisez le wrapper fourni)
 
 ### Installation et lancement
@@ -207,6 +208,35 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/todos/1
 Authorization: Bearer <token>
 ```
+
+#### Obtenir toutes les tâches (ADMIN)
+```bash
+GET http://localhost:8080/api/todos/all
+Authorization: Bearer <token>
+```
+
+## 📡 Logs temps reel (WebSocket)
+
+Le backend diffuse chaque requete HTTP en temps reel via WebSocket.
+
+- Endpoint WebSocket : `ws://localhost:8080/ws/requests?token=<jwt>`
+- Endpoint HTTP (liste) : `GET /api/metrics/requests?limit=200`
+
+## 🧭 Dashboard Web
+
+Un dashboard React est disponible dans [frontend/](frontend) :
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Ouvre `http://localhost:5173` puis connecte-toi avec un compte admin pour voir :
+- Users
+- Todos
+- All Todos (admin)
+- Request logs (temps reel via WebSocket)
 
 ## 🔒 Sécurité
 

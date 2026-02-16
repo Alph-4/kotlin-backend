@@ -16,19 +16,7 @@ class RequestLogController(
     fun getRequests(
         @RequestParam(required = false) limit: Int?
     ): ResponseEntity<List<RequestLogResponse>> {
-        val logs = requestLogService.list(limit)
-        val response = logs.map {
-            RequestLogResponse(
-                id = it.id,
-                timestamp = it.timestamp.toString(),
-                method = it.method,
-                path = it.path,
-                status = it.status,
-                durationMs = it.durationMs,
-                user = it.user,
-                ip = it.ip
-            )
-        }
+        val response = requestLogService.listResponses(limit)
         return ResponseEntity.ok(response)
     }
 }

@@ -50,6 +50,9 @@ function App() {
   const [dataError, setDataError] = useState('')
   const [adminError, setAdminError] = useState('')
   const [reqError, setReqError] = useState('')
+  const [wsStatus, setWsStatus] = useState<'connected' | 'disconnected' | 'error'>(
+    'disconnected'
+  )
 
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -67,12 +70,48 @@ function App() {
     return { Authorization: `Bearer ${token}` }
   }, [token])
 
+  const wsUrl = useMemo(() => {
+    if (!token) return null
+    const base = new URL(API_BASE)
+    const scheme = base.protocol === 'https:' ? 'wss:' : 'ws:'
+    return `${scheme}//${base.host}/ws/requests?token=${encodeURIComponent(token)}`
+  }, [token])
+
   useEffect(() => {
     if (token) {
       void fetchMe()
       void fetchTodos()
     }
   }, [token])
+
+  useEffect(() => {
+    if (!wsUrl) {
+      setWsStatus('disconnected')
+      return
+    }
+
+    const socket = new WebSocket(wsUrl)
+    setWsStatus('disconnected')
+
+    socket.onopen = () => setWsStatus('connected')
+    socket.onerror = () => setWsStatus('error')
+    socket.onclose = () => setWsStatus('disconnected')
+    socket.onmessage = (event) => {
+      try {
+        const log = JSON.parse(event.data) as RequestLog
+        setRequests((prev) => {
+          const next = [log, ...prev]
+          return next.slice(0, 200)
+        })
+      } catch (error) {
+        setReqError((error as Error).message)
+      }
+    }
+
+    return () => {
+      socket.close()
+    }
+  }, [wsUrl])
 
   async function login() {
     setAuthError('')
@@ -403,7 +442,12 @@ function App() {
 
         <article className="card wide">
           <div className="card-header">
-            <h2>Request log</h2>
+            <div className="header-group">
+              <h2>Request log</h2>
+              <span className={`status ${wsStatus}`}>
+                {wsStatus === 'connected' ? 'Live' : 'Offline'}
+              </span>
+            </div>
             <button className="ghost" onClick={() => void fetchRequests()} disabled={!token}>
               Refresh
             </button>

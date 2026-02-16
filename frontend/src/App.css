@@ -69,6 +69,35 @@
   gap: 12px;
 }
 
+.header-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.status.connected {
+  color: #1c1302;
+  background: linear-gradient(135deg, #f6c95b, #e89b32);
+}
+
+.status.disconnected {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status.error {
+  color: #ffb3a1;
+  background: rgba(255, 79, 79, 0.2);
+}
+
 .auth-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

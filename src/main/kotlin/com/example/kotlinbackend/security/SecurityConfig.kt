@@ -113,6 +113,7 @@ class SecurityConfig(
                     .requestMatchers(
                         "/api/auth/**",      // Inscription et connexion
                         "/h2-console/**",    // Console H2 (dev uniquement)
+                        "/ws/**",            // WebSocket pour logs temps reel
                         "/error"             // Page d'erreur
                     ).permitAll()
                     
