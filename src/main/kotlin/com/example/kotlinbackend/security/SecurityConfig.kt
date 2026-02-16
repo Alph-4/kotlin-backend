@@ -36,7 +36,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    private val userDetailsService: UserDetailsService
+    private val userDetailsService: UserDetailsService,
+    private val requestLogFilter: com.example.kotlinbackend.metrics.RequestLogFilter
 ) {
     
     /**
@@ -79,6 +80,8 @@ class SecurityConfig(
         configuration.allowedOrigins = listOf(
             "http://localhost:3000",
             "http://localhost:4200",
+            "http://localhost:5173",
+            "http://localhost:5174",
             "https://cuddly-goggles-957q767rpw6c9p7p.github.dev"
         )
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
@@ -101,9 +104,7 @@ class SecurityConfig(
             .cors { it.configurationSource(corsConfigurationSource()) }
             
             // Désactive CSRF (pas nécessaire pour une API REST stateless)
-            .csrf { csrf ->
-                csrf.ignoringRequestMatchers("/h2-console/**")  // Désactive CSRF pour H2
-            }
+            .csrf { it.disable() }
             
             // Configuration des autorisations
             .authorizeHttpRequests { authorize ->
@@ -128,6 +129,11 @@ class SecurityConfig(
             .addFilterBefore(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter::class.java
+            )
+            // Journalise les requetes apres l'authentification JWT
+            .addFilterAfter(
+                requestLogFilter,
+                JwtAuthenticationFilter::class.java
             )
             
             // Configure le provider d'authentification
