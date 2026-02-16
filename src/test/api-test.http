@@ -70,7 +70,7 @@ Content-Type: application/json
 
 ### 8️⃣ TEST D'AUTORISATION - USER essaie d'accéder à la liste des users (devrait être refusé 403)
 GET {{baseUrl}}/api/users
-Authorization: Bearer {{{{userToken}}}}
+Authorization: Bearer {{userToken}}
 
 ### 9️⃣ ACCÉDER À H2 CONSOLE (base de données)
 GET {{baseUrl}}/h2-console
@@ -83,11 +83,12 @@ Authorization: Bearer {{userToken}}
 POST {{baseUrl}}/api/todos
 Authorization: Bearer {{userToken}}
 Content-Type: application/json
+
 {
   "title": "Tâche de l'utilisateur",
   "description": "Ceci est une tâche créée par l'utilisateur",
   "completed": false
-}   
+}
 
 ### 12️⃣ VOIR LES TODOS EN TANT QU'USER
 GET {{baseUrl}}/api/todos
@@ -95,4 +96,8 @@ Authorization: Bearer {{userToken}}
 
 ### 13️⃣ TEST D'AUTORISATION - ADMIN essaie d'accéder à la liste des users
 GET {{baseUrl}}/api/users
+Authorization: Bearer {{adminToken}}
+
+### VOIR TOUT LES TODOS EN TANT QU'ADMIN
+GET {{baseUrl}}/api/todos
 Authorization: Bearer {{adminToken}}
