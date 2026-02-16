@@ -49,15 +49,21 @@ class TodoService(
      * @param completed Optionnel : filtre par statut (complété ou non)
      * @return List<TodoResponse> Liste des tâches
      */
-    fun getAllTodos(completed: Boolean? = null): List<TodoResponse> {
+    fun getAllTodos(completed: Boolean? = null, askedByAdmin: Boolean = false): List<TodoResponse> {
         val currentUser = userService.getCurrentUser()
         
-        val todos = if (completed != null) {
+          val todos: List<TodoItem>
+
+        if(askedByAdmin){
+           // Si l'admin demande, on retourne toutes les tâches de tous les utilisateurs        
+           todos = todoRepository.findAll()
+        }
+        else if (completed != null) {
             // Filtre par statut si spécifié
-            todoRepository.findByUserAndCompleted(currentUser, completed)
+            todos = todoRepository.findByUserAndCompleted(currentUser, completed)
         } else {
             // Sinon, retourne toutes les tâches
-            todoRepository.findByUser(currentUser)
+            todos =     todoRepository.findByUser(currentUser)
         }
         
         return todos.map { it.toTodoResponse() }

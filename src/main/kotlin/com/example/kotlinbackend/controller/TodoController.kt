@@ -8,6 +8,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.security.access.prepost.PreAuthorize
 
 /**
  * Controller pour la gestion des todos
@@ -127,4 +128,20 @@ class TodoController(
         todoService.deleteTodo(id)
         return ResponseEntity.ok(MessageResponse("Tâche supprimée avec succès"))
     }
+
+    /**
+    *GET /api/all-todos
+        * Récupère toutes les tâches de tous les utilisateurs (ADMIN uniquement)
+        * 
+        * Exemple : GET /api/all-todos
+        * 
+        * Réponse : Liste de toutes les tâches de tous les utilisateurs
+        */      
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getAllTodos(): ResponseEntity<List<TodoResponse>> {
+        val todos = todoService.getAllTodos(askedByAdmin = true)
+        return ResponseEntity.ok(todos)
+    }                        
+    
 }

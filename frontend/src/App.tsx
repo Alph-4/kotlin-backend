@@ -48,6 +48,7 @@ function App() {
   const [authUser, setAuthUser] = useState<UserResponse | null>(null)
   const [authError, setAuthError] = useState('')
   const [dataError, setDataError] = useState('')
+  const [adminError, setAdminError] = useState('')
   const [reqError, setReqError] = useState('')
 
   const [loginEmail, setLoginEmail] = useState('')
@@ -58,6 +59,7 @@ function App() {
 
   const [users, setUsers] = useState<UserResponse[]>([])
   const [todos, setTodos] = useState<TodoResponse[]>([])
+  const [adminTodos, setAdminTodos] = useState<TodoResponse[]>([])
   const [requests, setRequests] = useState<RequestLog[]>([])
 
   const authHeader = useMemo(() => {
@@ -125,6 +127,7 @@ function App() {
     setAuthUser(null)
     setUsers([])
     setTodos([])
+    setAdminTodos([])
     setRequests([])
   }
 
@@ -173,6 +176,22 @@ function App() {
       setTodos(data)
     } catch (error) {
       setDataError((error as Error).message)
+    }
+  }
+
+  async function fetchTodosAdmin() {
+    setAdminError('')
+    try {
+      const response = await fetch(`${API_BASE}/api/todos/all`, {
+        headers: { ...authHeader },
+      })
+      if (!response.ok) {
+        throw new Error(`Load admin todos failed (${response.status})`)
+      }
+      const data = (await response.json()) as TodoResponse[]
+      setAdminTodos(data)
+    } catch (error) {
+      setAdminError((error as Error).message)
     }
   }
 
@@ -341,6 +360,37 @@ function App() {
             ) : (
               todos.map((todo) => (
                 <div className="row" key={todo.id}>
+                  <span>{todo.id}</span>
+                  <span>{todo.title}</span>
+                  <span>{todo.completed ? 'Done' : 'Open'}</span>
+                  <span>{todo.updatedAt}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </article>
+
+        <article className="card">
+          <div className="card-header">
+            <h2>All Todos (Admin)</h2>
+            <button className="ghost" onClick={() => void fetchTodosAdmin()} disabled={!token}>
+              Refresh
+            </button>
+          </div>
+          <p className="muted">Requires ADMIN role.</p>
+          {adminError ? <p className="error">{adminError}</p> : null}
+          <div className="table">
+            <div className="row header">
+              <span>ID</span>
+              <span>Title</span>
+              <span>Status</span>
+              <span>Updated</span>
+            </div>
+            {adminTodos.length === 0 ? (
+              <div className="row empty">No admin todos loaded.</div>
+            ) : (
+              adminTodos.map((todo) => (
+                <div className="row" key={`admin-${todo.id}`}>
                   <span>{todo.id}</span>
                   <span>{todo.title}</span>
                   <span>{todo.completed ? 'Done' : 'Open'}</span>
