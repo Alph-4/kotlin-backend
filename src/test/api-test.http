@@ -99,7 +99,7 @@ GET {{baseUrl}}/api/users
 Authorization: Bearer {{adminToken}}
 
 ### VOIR TOUT LES TODOS EN TANT QU'ADMIN
-GET {{baseUrl}}/api/todos
+GET {{baseUrl}}/api/todos/all
 Authorization: Bearer {{adminToken}}
 
 
