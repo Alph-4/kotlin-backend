@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 /**
  * Service d'authentification
@@ -92,6 +93,28 @@ class AuthService(
         return AuthResponse(
             token = token,
             user = user.toUserResponse()
+        )
+    }
+
+    /**
+     * Cree un utilisateur anonyme et retourne un token JWT.
+     * Utilise un email unique pour eviter les collisions.
+     */
+    fun guest(): AuthResponse {
+        val guestId = UUID.randomUUID().toString()
+        val user = User(
+            email = "guest-$guestId@demo.local",
+            displayName = "Guest-${guestId.take(6)}",
+            password = passwordEncoder.encode(UUID.randomUUID().toString()),
+            role = "USER"
+        )
+
+        val savedUser = userRepository.save(user)
+        val token = jwtUtil.generateToken(savedUser)
+
+        return AuthResponse(
+            token = token,
+            user = savedUser.toUserResponse()
         )
     }
     

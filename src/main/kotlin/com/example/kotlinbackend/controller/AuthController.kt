@@ -84,6 +84,16 @@ class AuthController(
             throw RuntimeException("Identifiants invalides: ${e.message}")
         }
     }
+
+    /**
+     * POST /api/auth/guest
+     * Cree un utilisateur anonyme et renvoie un token JWT
+     */
+    @PostMapping("/guest")
+    fun guest(): ResponseEntity<AuthResponse> {
+        val response = authService.guest()
+        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+    }
     
     /**
      * GET /api/auth/test

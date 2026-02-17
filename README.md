@@ -127,6 +127,14 @@ Content-Type: application/json
 
 **Réponse :** Identique à l'inscription
 
+### 2bis. Mode demo (guest)
+
+```bash
+POST http://localhost:8080/api/auth/guest
+```
+
+**Réponse :** Identique a l'inscription (token + user)
+
 ### 3. Utiliser le token JWT
 
 Pour tous les endpoints protégés, ajoutez le token dans l'en-tête :
@@ -257,6 +265,8 @@ Ouvre `http://localhost:5175` puis connecte-toi pour :
 - Creer des todos
 - Marquer comme termine
 - Supprimer des todos
+- Editer titre et description
+- Tester en mode demo (guest)
 
 ### Configuration API (frontends)
 
