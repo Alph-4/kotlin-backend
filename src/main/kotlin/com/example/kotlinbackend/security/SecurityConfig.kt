@@ -82,6 +82,7 @@ class SecurityConfig(
             "http://localhost:4200",
             "http://localhost:5173",
             "http://localhost:5174",
+            "http://localhost:5175",
             "https://cuddly-goggles-957q767rpw6c9p7p.github.dev"
         )
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")

@@ -9,6 +9,8 @@ Ce projet est un backend REST API complet développé en Kotlin avec Spring Boot
 - **CRUD Todo List** (créer, lire, modifier, supprimer des tâches)
 - **Sécurité** avec Spring Security
 - **Base de données** H2 en mémoire (facile à remplacer par PostgreSQL/MySQL)
+- **Dashboard back-end** (React)
+- **Client Todo Web** (React)
 
 ## 🛠️ Technologies utilisées
 
@@ -24,6 +26,8 @@ Ce projet est un backend REST API complet développé en Kotlin avec Spring Boot
 ## 📁 Structure du projet
 
 ```
+back_end_dashboard/                 # Dashboard back-end (React)
+todo_client/                         # Client Todo Web (React)
 src/main/kotlin/com/example/kotlinbackend/
 ├── KotlinBackendApplication.kt      # Point d'entrée de l'application
 ├── controller/                       # Controllers REST (API endpoints)
@@ -57,6 +61,7 @@ src/main/kotlin/com/example/kotlinbackend/
 
 - JDK 22 ou supérieur
 - Gradle (ou utilisez le wrapper fourni)
+- Node.js 18+ (pour les frontends)
 
 ### Installation et lancement
 
@@ -89,7 +94,7 @@ Content-Type: application/json
 
 {
   "email": "user@example.com",
-  "username": "John Doe",
+  "displayName": "John Doe",
   "password": "motdepasse123"
 }
 ```
@@ -102,7 +107,7 @@ Content-Type: application/json
   "user": {
     "id": 1,
     "email": "user@example.com",
-    "username": "John Doe",
+      "displayName": "John Doe",
     "role": "USER"
   }
 }
@@ -224,10 +229,10 @@ Le backend diffuse chaque requete HTTP en temps reel via WebSocket.
 
 ## 🧭 Dashboard Web
 
-Un dashboard React est disponible dans [frontend/](frontend) :
+Un dashboard React est disponible dans [back_end_dashboard/](back_end_dashboard) :
 
 ```bash
-cd frontend
+cd back_end_dashboard
 npm install
 npm run dev
 ```
@@ -237,6 +242,30 @@ Ouvre `http://localhost:5173` puis connecte-toi avec un compte admin pour voir :
 - Todos
 - All Todos (admin)
 - Request logs (temps reel via WebSocket)
+
+## ✅ Client Todo Web
+
+Application web simple pour gerer ses todos :
+
+```bash
+cd todo_client
+npm install
+npm run dev
+```
+
+Ouvre `http://localhost:5175` puis connecte-toi pour :
+- Creer des todos
+- Marquer comme termine
+- Supprimer des todos
+
+### Configuration API (frontends)
+
+Par defaut les frontends ciblent `http://localhost:8080`.
+Tu peux changer la base API via :
+
+```
+VITE_API_BASE=http://localhost:8080
+```
 
 ## 🔒 Sécurité
 
